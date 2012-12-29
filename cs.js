@@ -52,7 +52,6 @@ define(['module'], function (module) {
         //Do not explicitly handle errors, those should be
         //visible via console output in the browser.
         if (xhr.readyState === 4) {
-          console.log(xhr);
           status = xhr.status;
           if ((status > 399 && status < 600)) {
             err = new Error(url + ' HTTP status: ' + status);
