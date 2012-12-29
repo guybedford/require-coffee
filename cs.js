@@ -10,7 +10,7 @@ ActiveXObject, process, require */
 
 define(['module'], function (module) {
   'use strict';
-  var getXhr,
+  var getXhr, fs,
     progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'],
     fetchText = function () {
       throw new Error('Environment unsupported.');
