@@ -51,11 +51,13 @@ define(['module'], function (module) {
       //Do not explicitly handle errors, those should be
       //visible via console output in the browser.
       if (xhr.readyState === 4) {
+        console.log(xhr);
         status = xhr.status;
-        if ((status > 399 && status < 600) || status == 0) {
+        if ((status > 399 && status < 600)) {
           err = new Error(url + ' HTTP status: ' + status);
           err.xhr = xhr;
-          errback(err);
+          if (errback)
+            errback(err);
         }
         else
           callback(xhr.responseText);
@@ -98,6 +100,9 @@ define(['module'], function (module) {
           parentRequire([module.id + '!' + name], function (value) {
             load(value);
           });
+        }, function(err) {
+          if (load.error)
+            load.error(err);
         });
       }, function (err) {
         if (load.error)
