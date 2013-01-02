@@ -8,7 +8,7 @@
 /*global define, window, XMLHttpRequest, importScripts, Packages, java,
 ActiveXObject, process, require */
 
-define(['module'], function (module) {
+define(['module', 'require'], function (module, req) {
   'use strict';
   var getXhr, fs,
     progIds = ['Msxml2.XMLHTTP', 'Microsoft.XMLHTTP', 'Msxml2.XMLHTTP.4.0'],
@@ -119,7 +119,7 @@ define(['module'], function (module) {
     version: '0.4.3',
 
     load: function (name, parentRequire, load, config) {
-      require(['coffee-script'], function(CoffeeScript) {
+      req(['./coffee-script'], function(CoffeeScript) {
         var path = parentRequire.toUrl(name + '.coffee');
         fetchText(path, function (text) {
 
