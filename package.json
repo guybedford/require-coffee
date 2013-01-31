@@ -1,11 +1,7 @@
 {
-    "name": "cs",
-    "description": "An AMD loader plugin for CoffeeScript",
-    "categories": [
-        "Loader plugins",
-        "Parsers & Compilers"
-    ],
-    "version": "0.4.3",
+    "name": "Require Coffee",
+    "description": "CoffeeScript Compiler for Zest",
+    "version": "0.0.q",
     "dependencies": {
         "coffee-script": ">=1.2.0"
     },

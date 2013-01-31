@@ -1,13 +1,3 @@
-/**
-* @license cs 0.4.3 Copyright (c) 2010-2011, The Dojo Foundation All Rights Reserved.
-* Available via the MIT or new BSD license.
-* see: http://github.com/jrburke/require-cs for details
-*/
-
-/*jslint */
-/*global define, window, XMLHttpRequest, importScripts, Packages, java,
-ActiveXObject, process, require */
-
 define(['module', 'require'], function (module, req) {
   'use strict';
   var getXhr, fs,
@@ -119,7 +109,7 @@ define(['module', 'require'], function (module, req) {
     version: '0.4.3',
 
     load: function (name, parentRequire, load, config) {
-      req(['./coffee-script'], function(CoffeeScript) {
+      req(['coffee-script'], function(CoffeeScript) {
         var path = parentRequire.toUrl(name + '.coffee');
         fetchText(path, function (text) {
 
