@@ -122,7 +122,7 @@ define(['module', 'require'], function (module, req) {
         
         // check if we're on the same domain or not
         var sameDomain = true,
-          domainCheck = /^(\w+:)?\/\/([^\/]+)/.exec(fileUrl);
+          domainCheck = /^(\w+:)?\/\/([^\/]+)/.exec(path);
         if (typeof window != 'undefined' && domainCheck) {
           sameDomain = domainCheck[2] === window.location.host;
           if (domainCheck[1])
