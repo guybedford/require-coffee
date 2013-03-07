@@ -117,21 +117,21 @@ define(['module', 'require'], function (module, req) {
     },
 
     load: function (name, parentRequire, load, config) {
-      req(['coffee-script'], function(CoffeeScript) {
-        var path = parentRequire.toUrl(name + '.coffee');
-        
-        // check if we're on the same domain or not
-        var sameDomain = true,
-          domainCheck = /^(\w+:)?\/\/([^\/]+)/.exec(path);
-        if (typeof window != 'undefined' && domainCheck) {
-          sameDomain = domainCheck[2] === window.location.host;
-          if (domainCheck[1])
-            sameDomain &= domainCheck[1] === window.location.protocol;
-        }
-        
-        if (sameDomain)
-          fetchText(path, function (text) {
-  
+      var path = parentRequire.toUrl(name + '.coffee');
+      
+      // check if we're on the same domain or not
+      var sameDomain = true,
+        domainCheck = /^(\w+:)?\/\/([^\/]+)/.exec(path);
+      if (typeof window != 'undefined' && domainCheck) {
+        sameDomain = domainCheck[2] === window.location.host;
+        if (domainCheck[1])
+          sameDomain &= domainCheck[1] === window.location.protocol;
+      }
+      
+      if (sameDomain)
+        fetchText(path, function (text) {
+          req(['coffee-script'], function(CoffeeScript) {
+
             //Do CoffeeScript transform.
             try {
               text = CoffeeScript.compile(text, config.CoffeeScript);
@@ -154,17 +154,17 @@ define(['module', 'require'], function (module, req) {
             parentRequire([module.id + '!' + name], function (value) {
               load(value);
             });
-          }, function(err) {
+          }, function (err) {
             if (load.error)
               load.error(err);
           });
-        else
-          parentRequire([parentRequire.toUrl(name) + '.coffee.js']);
-          
-      }, function (err) {
-        if (load.error)
-          load.error(err);
-      });
+        }, function(err) {
+          if (load.error)
+            load.error(err);
+        });
+      else
+        parentRequire([parentRequire.toUrl(name) + '.coffee.js']);
+        
     }
   };
 });
