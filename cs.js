@@ -107,38 +107,60 @@ define(['module', 'require'], function (module, req) {
     fetchText: fetchText,
 
     version: '0.4.3',
+    
+    writeFile: function(pluginName, moduleName, req, write, config) {
+      var load = function(module) {}
+      load.fromText = function(jsSource) {
+        write.asModule(pluginName + '!' + moduleName, req.toUrl(moduleName) + '.js', jsSource);
+      }
+      this.load(moduleName, req, load, config);
+    },
 
     load: function (name, parentRequire, load, config) {
       req(['coffee-script'], function(CoffeeScript) {
         var path = parentRequire.toUrl(name + '.coffee');
-        fetchText(path, function (text) {
-
-          //Do CoffeeScript transform.
-          try {
-            text = CoffeeScript.compile(text, config.CoffeeScript);
-          } catch (err) {
-            err.message = "In " + path + ", " + err.message;
-            throw err;
-          }
-
-          //IE with conditional comments on cannot handle the
-          //sourceURL trick, so skip it if enabled.
-          /*@if (@_jscript) @else @*/
-          text += "\r\n//@ sourceURL=" + path;
-          /*@end@*/
-
-          load.fromText(module.id + '!' + name, text);
-
-          //Give result to load. Need to wait until the module
-          //is fully parse, which will happen after this
-          //execution.
-          parentRequire([module.id + '!' + name], function (value) {
-            load(value);
+        
+        // check if we're on the same domain or not
+        var sameDomain = true,
+          domainCheck = /^(\w+:)?\/\/([^\/]+)/.exec(fileUrl);
+        if (typeof window != 'undefined' && domainCheck) {
+          sameDomain = domainCheck[2] === window.location.host;
+          if (domainCheck[1])
+            sameDomain &= domainCheck[1] === window.location.protocol;
+        }
+        
+        if (sameDomain)
+          fetchText(path, function (text) {
+  
+            //Do CoffeeScript transform.
+            try {
+              text = CoffeeScript.compile(text, config.CoffeeScript);
+            } catch (err) {
+              err.message = "In " + path + ", " + err.message;
+              throw err;
+            }
+  
+            //IE with conditional comments on cannot handle the
+            //sourceURL trick, so skip it if enabled.
+            /*@if (@_jscript) @else @*/
+            text += "\r\n//@ sourceURL=" + path;
+            /*@end@*/
+  
+            load.fromText(module.id + '!' + name, text);
+  
+            //Give result to load. Need to wait until the module
+            //is fully parse, which will happen after this
+            //execution.
+            parentRequire([module.id + '!' + name], function (value) {
+              load(value);
+            });
+          }, function(err) {
+            if (load.error)
+              load.error(err);
           });
-        }, function(err) {
-          if (load.error)
-            load.error(err);
-        });
+        else
+          parentRequire([name]);
+          
       }, function (err) {
         if (load.error)
           load.error(err);
