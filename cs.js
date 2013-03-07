@@ -163,7 +163,7 @@ define(['module', 'require'], function (module, req) {
             load.error(err);
         });
       else
-        parentRequire([parentRequire.toUrl(name) + '.coffee.js'], load);
+        parentRequire([name + '.coffee'], load);
         
     }
   };
